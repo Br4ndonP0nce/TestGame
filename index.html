@@ -47,6 +47,10 @@
           frameWidth: 32,
           frameHeight: 48,
         });
+        this.load.spritesheet("dude", "assets/dude.png", {
+          frameWidth: 32,
+          frameHeight: 48,
+        });
       }
 
       function create() {
@@ -61,9 +65,12 @@
         platforms.create(50, 250, "ground");
         platforms.create(750, 220, "ground");
         player = this.physics.add.sprite(100, 450, "dude");
+        player2 = this.physics.add.sprite(150, 450, "dude");
 
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
+        player2.setBounce(0.2);
+        player2.setCollideWorldBounds(true);
 
         this.anims.create({
           key: "left",
@@ -85,7 +92,9 @@
           repeat: -1,
         });
         this.physics.add.collider(player, platforms);
+        this.physics.add.collider(player2, platforms);
         cursors = this.input.keyboard.createCursorKeys();
+        kesy = this.input.keyboard.createCursorKeys();
         stars = this.physics.add.group({
           key: "star",
           repeat: 11,
@@ -97,6 +106,7 @@
         });
         this.physics.add.collider(stars, platforms);
         this.physics.add.overlap(player, stars, collectStar, null, this);
+        this.physics.add.overlap(player2, stars, collectStar, null, this);
         function collectStar(player, star) {
           star.disableBody(true, true);
 
@@ -157,6 +167,20 @@
         if (cursors.up.isDown && player.body.touching.down) {
           player.setVelocityY(-330);
         }
+        this.input.keyboard.on("keydown_A", function (event) {
+          player2.setVelocityX(-160);
+
+          player2.anims.play("left", true);
+        });
+        this.input.keyboard.on("keydown_D", function (event) {
+          player2.setVelocityX(160);
+
+          player2.anims.play("right", true);
+        });
+        this.input.keyboard.on("keydown_W", function (event) {
+          player2.setVelocityY(-330);
+        });
+
         if (gameOver) {
           if (game.input.activePointer.isDown) {
             gameOver = false;
